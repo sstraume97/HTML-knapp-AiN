@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>CTA-knappgenerator</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg: #eef2f6;
+    --surface: #ffffff;
+    --surface-sunken: #f4f6f9;
+    --border: #dbe2ea;
+    --ink: #16232f;
+    --ink-muted: #57697a;
+    --ink-faint: #8496a6;
+    --accent: #005b95;
+    --accent-ink: #ffffff;
+    --accent-soft: #e6eef5;
+    --ok: #1a7a4c;
+    --code-bg: #0f1e2b;
+    --code-ink: #cfe3f2;
+    --code-tag: #6fb1e8;
+    --code-attr: #8fd6c3;
+    --code-str: #e8b979;
+    --shadow: 0 1px 2px rgba(20,35,50,.06), 0 8px 24px -12px rgba(20,35,50,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #0f1620;
+      --surface: #17212c;
+      --surface-sunken: #121a24;
+      --border: #2a3644;
+      --ink: #e7edf3;
+      --ink-muted: #9db0c0;
+      --ink-faint: #6d8093;
+      --accent: #5aa9e0;
+      --accent-ink: #08141f;
+      --accent-soft: #1b2d3d;
+      --ok: #4fbd85;
+      --code-bg: #0a121a;
+      --code-ink: #cfe3f2;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #0f1620;
+    --surface: #17212c;
+    --surface-sunken: #121a24;
+    --border: #2a3644;
+    --ink: #e7edf3;
+    --ink-muted: #9db0c0;
+    --ink-faint: #6d8093;
+    --accent: #5aa9e0;
+    --accent-ink: #08141f;
+    --accent-soft: #1b2d3d;
+    --ok: #4fbd85;
+    --code-bg: #0a121a;
+    --code-ink: #cfe3f2;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin: 0; }
+  img{ max-width: 100%; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    padding: 40px 20px 64px;
+  }
+  .wrap{
+    max-width: 880px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  header{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .eyebrow{
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  h1{
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .sub{
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: 14.5px;
+    max-width: 60ch;
+    line-height: 1.55;
+  }
+
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+
+  .grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  @media (min-width: 760px){
+    .grid{ grid-template-columns: 1fr 1fr; }
+  }
+
+  .field{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .field:last-child{ margin-bottom: 0; }
+  label{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  label .hint{
+    font-weight: 400;
+    color: var(--ink-faint);
+    margin-left: 4px;
+  }
+  input[type="text"], input[type="url"]{
+    font: inherit;
+    font-size: 14.5px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-sunken);
+    color: var(--ink);
+    outline: none;
+    width: 100%;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  input[type="text"]:focus, input[type="url"]:focus{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .warn{
+    font-size: 12.5px;
+    color: #b8752b;
+    min-height: 16px;
+  }
+
+  .preview-label{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .preview-box{
+    background: var(--surface-sunken);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 36px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 96px;
+  }
+
+  .divider{
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  .code-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .copy-btn{
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border: none;
+    border-radius: 7px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: opacity .15s ease, transform .1s ease;
+  }
+  .copy-btn:hover{ opacity: .9; }
+  .copy-btn:active{ transform: translateY(1px); }
+  .copy-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+  .copy-btn.copied{ background: var(--ok); }
+
+  pre{
+    margin: 0;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre .tag{ color: var(--code-tag); }
+  pre .attr{ color: var(--code-attr); }
+  pre .str{ color: var(--code-str); }
+
+  .steps{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .steps li{
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+  .steps b{ color: var(--ink); font-weight: 600; }
+  .steps code{
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12.5px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 1px 6px;
+    border-radius: 5px;
+  }
+
+  footer{
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+  }
+  footer code{
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">HTML for e-post</span>
+    <h1>CTA-knappgenerator</h1>
+    <p class="sub">Skriv inn teksten og lenken knappen skal ha. Koden nederst oppdateres automatisk — kopier den rett inn i HTML-blokken i e-postverktøyet.</p>
+  </header>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <div class="field">
+          <label for="btnText">Knappetekst</label>
+          <input id="btnText" type="text" value="Meld deg på her!" maxlength="60" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="btnUrl">Lenke <span class="hint">(full URL, inkl. https://)</span></label>
+          <input id="btnUrl" type="url" placeholder="https://event.checkin.no/223999/..." autocomplete="off">
+          <div class="warn" id="urlWarn"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="preview-label">Forhåndsvisning</div>
+        <div class="preview-box" id="previewBox"></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="code-head">
+      <div class="preview-label" style="margin-bottom:0;">Ferdig kode</div>
+      <button class="copy-btn" id="copyBtn" type="button">Kopier kode</button>
+    </div>
+    <pre id="codeOut"></pre>
+  </div>
+
+  <div class="card">
+    <div class="preview-label">Slik brukes den</div>
+    <ol class="steps">
+      <li><b>1.</b> Fyll ut <b>Knappetekst</b> og <b>Lenke</b> over — forhåndsvisningen og koden oppdateres mens du skriver.</li>
+      <li><b>2.</b> Trykk <b>Kopier kode</b>.</li>
+      <li><b>3.</b> Lim koden inn i HTML/kode-blokken i e-postverktøyet, i stedet for den gamle knapp-koden.</li>
+      <li><b>4.</b> Sjekk forhåndsvisningen i e-postverktøyet før du sender — se etter at teksten er riktig og at knappen faktisk peker dit du vil.</li>
+    </ol>
+  </div>
+
+  <footer>Fargen på knappen er satt til <code>rgb(0, 91, 149)</code> — samme blå som originalmalen.</footer>
+</div>
+
+<script>
+  const textInput = document.getElementById('btnText');
+  const urlInput = document.getElementById('btnUrl');
+  const urlWarn = document.getElementById('urlWarn');
+  const previewBox = document.getElementById('previewBox');
+  const codeOut = document.getElementById('codeOut');
+  const copyBtn = document.getElementById('copyBtn');
+
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function escapeAttr(s){
+    return escapeHtml(s).replace(/"/g,'&quot;');
+  }
+
+  function buildHtml(text, url){
+    const safeText = escapeHtml(text || '');
+    const safeUrl = escapeAttr(url || '#');
+    return '<table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin: auto;">\n' +
+'\t<tbody>\n' +
+'\t\t<tr>\n' +
+'\t\t\t<td style="background: rgb(0, 91, 149); border-radius: 7px; text-align: center;"><a href="' + safeUrl + '" style="background: rgb(0, 91, 149); border-radius: 7px; border: 11px solid rgb(0, 91, 149); border-image: none; text-align: center; line-height: 1.1em; font-family: sans-serif; font-size: 12px; font-weight: bold; text-decoration: none; display: block;" target="_blank"><span style="color:#ffffff;">' + safeText + '</span></a></td>\n' +
+'\t\t</tr>\n' +
+'\t</tbody>\n' +
+'</table>';
+  }
+
+  function highlight(html){
+    return escapeHtml(html)
+      .replace(/(&lt;\/?)([a-zA-Z0-9]+)/g, '$1<span class="tag">$2</span>')
+      .replace(/([a-zA-Z-]+)(=)(&quot;)([^&]*(?:&(?!quot;)[^&]*)*)(&quot;)/g,
+        '<span class="attr">$1</span>$2<span class="str">$3$4$5</span>');
+  }
+
+  function looksLikeUrl(v){
+    if(!v) return true;
+    return /^https?:\/\/\S+\.\S+/i.test(v.trim());
+  }
+
+  function render(){
+    const text = textInput.value.trim() || 'Meld deg på her!';
+    const urlRaw = urlInput.value.trim();
+
+    urlWarn.textContent = (urlRaw && !looksLikeUrl(urlRaw))
+      ? 'Ser ikke ut som en gyldig lenke — sjekk at den starter med https://'
+      : '';
+
+    const html = buildHtml(text, urlRaw);
+    codeOut.innerHTML = highlight(html);
+
+    previewBox.innerHTML = html.replace(
+      '<a href="' + escapeAttr(urlRaw || '#') + '"',
+      '<a href="' + escapeAttr(urlRaw || '#') + '" onclick="return false;"'
+    );
+  }
+
+  textInput.addEventListener('input', render);
+  urlInput.addEventListener('input', render);
+
+  copyBtn.addEventListener('click', async () => {
+    const html = buildHtml(textInput.value.trim() || 'Meld deg på her!', urlInput.value.trim());
+    try{
+      await navigator.clipboard.writeText(html);
+    }catch(e){
+      const ta = document.createElement('textarea');
+      ta.value = html;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try{ document.execCommand('copy'); }catch(e2){}
+      document.body.removeChild(ta);
+    }
+    copyBtn.textContent = 'Kopiert!';
+    copyBtn.classList.add('copied');
+    setTimeout(() => {
+      copyBtn.textContent = 'Kopier kode';
+      copyBtn.classList.remove('copied');
+    }, 1600);
+  });
+
+  render();
+</script>
+</body>
+</html>
