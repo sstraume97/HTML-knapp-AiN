@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
+  /* Disse variablene styrer kun utseendet på DENNE siden (verktøyet).
+     De påvirker IKKE fargen/fonten på selve knappen som genereres —
+     den styres i JavaScript-funksjonen buildHtml() lenger ned i filen. */
   :root{
     --bg: #eef2f6;
     --surface: #ffffff;
@@ -323,13 +326,30 @@
     return escapeHtml(s).replace(/"/g,'&quot;');
   }
 
+  // ----------------------------------------------------------------
+  // HER endrer du utseendet på selve knappen (den som limes inn i
+  // nyhetsbrevet). E-postklienter støtter ikke vanlig CSS, så alt må
+  // stå som inline "style"-attributter direkte på hver tag under.
+  // ----------------------------------------------------------------
   function buildHtml(text, url){
     const safeText = escapeHtml(text || '');
     const safeUrl = escapeAttr(url || '#');
     return '<table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin: auto;">\n' +
 '\t<tbody>\n' +
 '\t\t<tr>\n' +
-'\t\t\t<td style="background: rgb(0, 91, 149); border-radius: 7px; text-align: center;"><a href="' + safeUrl + '" style="background: rgb(0, 91, 149); border-radius: 7px; border: 11px solid rgb(0, 91, 149); border-image: none; text-align: center; line-height: 1.1em; font-family: sans-serif; font-size: 12px; font-weight: bold; text-decoration: none; display: block;" target="_blank"><span style="color:#ffffff;">' + safeText + '</span></a></td>\n' +
+      // rgb(0, 91, 149) = knappens bakgrunnsfarge — finnes 2 steder her,
+      // begge må endres sammen for at det skal se riktig ut.
+      // border-radius 7px = hjørneavrunding.
+'\t\t\t<td style="background: rgb(0, 91, 149); border-radius: 7px; text-align: center;"><a href="' + safeUrl + '" style="background: rgb(0, 91, 149); border-radius: 7px; ' +
+      // border: 11px solid ... = "usynlig" kant i samme farge som bakgrunnen,
+      // brukes som luft/padding inni knappen (padding støttes dårlig i e-post).
+      // Øk/reduser 11px for å gjøre knappen høyere/lavere og bredere/smalere.
+'border: 11px solid rgb(0, 91, 149); border-image: none; text-align: center; line-height: 1.1em; ' +
+      // font-family/size/weight = tekststilen på knappen.
+      // text-decoration: none = fjerner understrek på lenken.
+'font-family: sans-serif; font-size: 12px; font-weight: bold; text-decoration: none; display: block;" target="_blank">' +
+      // color:#ffffff = tekstfargen på selve knappeteksten.
+'<span style="color:#ffffff;">' + safeText + '</span></a></td>\n' +
 '\t\t</tr>\n' +
 '\t</tbody>\n' +
 '</table>';
